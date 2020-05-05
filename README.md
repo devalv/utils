@@ -1,3 +1,5 @@
+[![codecov](https://codecov.io/gh/devalv/utils/branch/master/graph/badge.svg)](https://codecov.io/gh/devalv/utils)
+
 #### Создание env
 pipenv install --dev
 
