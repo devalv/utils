@@ -9,3 +9,6 @@ python -m unittest discover tests/
 
 #### Запуск coverage и создание отчета
 python3 -m coverage run -m unittest discover tests/ && python3 -m coverage html
+
+#### Активация codecov
+https://github.com/codecov/example-python

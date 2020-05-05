@@ -1,7 +1,6 @@
-#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
-"""Yet another phantom ammo maker."""
+"""Some useful utils for pure python scripts."""
 import argparse
 import datetime
 import io
@@ -9,6 +8,7 @@ import json
 import logging
 import os
 import sys
+from abc import ABC
 
 
 class TypeChecker:
@@ -47,7 +47,7 @@ class IntType(TypeChecker):
         super().__init__(name, int)
 
 
-class Util:
+class Util(ABC):
     """Some useful utils methods."""
 
     def update(self, config_dict: dict):
@@ -288,7 +288,8 @@ def parse_args():  # pragma: no cover
     return parser.parse_args()
 
 
-def main():  # noqa
+def main():  # pragma: no cover
+    """Strait execution examples."""
     args = parse_args()
 
     if args.template:
@@ -301,8 +302,7 @@ def main():  # noqa
     try:
         user_config = Config(args.config)
         user_config.log.debug(f'Configuration file loaded: {user_config.public_attrs()}')
-    except (AssertionError, FileExistsError) as error_msg:
-        user_config.log.critical(str(error_msg))
+    except (AssertionError, FileExistsError):
         sys.exit(1)
 
     sys.exit(0)
