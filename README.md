@@ -1,4 +1,5 @@
 [![codecov](https://codecov.io/gh/devalv/utils/branch/master/graph/badge.svg)](https://codecov.io/gh/devalv/utils)
+![Python package](https://github.com/devalv/utils/workflows/Python%20package/badge.svg)
 
 #### Creating env
 pipenv install --dev
