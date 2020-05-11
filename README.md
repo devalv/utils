@@ -1,5 +1,6 @@
 [![codecov](https://codecov.io/gh/devalv/utils/branch/master/graph/badge.svg)](https://codecov.io/gh/devalv/utils)
-![Python package](https://github.com/devalv/utils/workflows/Python%20package/badge.svg)
+![tests](https://github.com/devalv/utils/workflows/tests/badge.svg)
+![build](https://github.com/devalv/utils/workflows/build/badge.svg)
 
 # Set of tools that often have to reproduce in Python scripts.
 
