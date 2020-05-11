@@ -6,7 +6,6 @@ import io
 import json
 import os
 from abc import ABC
-from collections.abc import Iterable
 
 
 class Util(ABC):
@@ -80,7 +79,7 @@ class Util(ABC):
     def save_text_file(file_path: str, txt_data):
         """Save file in plaint text format."""
         with io.open(file_path, mode='w', encoding='utf-8') as output_f:
-            if isinstance(txt_data, Iterable):
+            if isinstance(txt_data, list):
                 output_f.writelines(txt_data)
             else:
                 output_f.write(txt_data)
