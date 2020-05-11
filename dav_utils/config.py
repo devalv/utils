@@ -52,8 +52,8 @@ class Config(Util):
 
         return file_config
 
-    def create_template(self, file_path):
-        """Create config file template."""
+    def create_template(self, file_path: str):
+        """Create JSON config file template."""
         # For extra verbosity keys should be in upper register
         attrs = {k.upper(): v for k, v in self.public_attrs().items()}
         self.save_json_file(file_path, attrs)

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """Python package config.
 
-example: python3 setup.py sdist bdist_wheel
+build example: python3 setup.py sdist bdist_wheel
 """
 import setuptools
 

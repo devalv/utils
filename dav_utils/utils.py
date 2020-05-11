@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Some useful utils for pure python scripts."""
+"""Some utils for pure python scripts."""
 
 import datetime
 import io
@@ -12,18 +12,18 @@ from collections.abc import Iterable
 class Util(ABC):
     """Some useful utils methods."""
 
-    def update(self, config_dict: dict):
+    def update(self, attrs_dict: dict):
         """Update class public attrs."""
-        for attr in config_dict:
+        for attr in attrs_dict:
             if attr.startswith('_'):
                 continue
             if hasattr(self.__class__, attr) and callable(getattr(self.__class__, attr)):  # noqa
                 continue
-            self.__setattr__(attr.lower(), config_dict[attr])
+            self.__setattr__(attr.lower(), attrs_dict[attr])
 
     @staticmethod
     def check_exists(file_path: str) -> str:
-        """Check file_path for exists."""
+        """Raise FileNotFoundError if file_path not exists."""
         if not os.path.exists(file_path):
             file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), file_path)  # noqa
 
@@ -34,7 +34,7 @@ class Util(ABC):
 
     @staticmethod
     def check_not_exists(file_path: str) -> str:
-        """Check that there is no file_path."""
+        """Raise FileExistsError if file_path already exists."""
         if os.path.exists(file_path):
             raise FileExistsError('File {} already exists.'.format(file_path))
         return file_path
@@ -59,8 +59,8 @@ class Util(ABC):
         return converted
 
     @staticmethod
-    def date_to_str(date: datetime.date, date_fmt: str):
-        """Convert date to str."""
+    def date_to_str(date: datetime.datetime, date_fmt: str):
+        """Convert date/datetime to str."""
         try:
             converted = datetime.datetime.strftime(date, date_fmt)
         except (TypeError, ValueError) as conversion_error:
@@ -69,7 +69,7 @@ class Util(ABC):
 
     @staticmethod
     def read_file_gen(file_name: str):
-        """Line by line read the log file."""
+        """Line by line read the file_name file."""
         assert (isinstance(file_name, str))
         with open(file_name, 'rt') as f:
             for line in f:

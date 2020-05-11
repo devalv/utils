@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Useful descriptors for extra type checking."""
+"""Descriptors for extra type checking."""
 
 
 class TypeChecker:
