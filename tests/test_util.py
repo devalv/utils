@@ -5,7 +5,8 @@ import unittest
 import uuid
 from collections.abc import Iterable
 
-from utils import IntType, StringType, Util
+from dav_utils.descriptors import IntType, StringType
+from dav_utils.utils import Util
 
 
 class TestUtil(unittest.TestCase):
