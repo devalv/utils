@@ -1,5 +1,5 @@
 # Runs tests and coverage measuring.
-name: Python package
+xname: tests
 
 on:
   push:
