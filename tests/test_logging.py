@@ -4,7 +4,7 @@ import os
 import unittest
 import uuid
 
-from utils import Logging
+from dav_utils.logger import Logging
 
 
 class TestLogging(unittest.TestCase):
