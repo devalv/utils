@@ -5,7 +5,8 @@ import unittest
 import uuid
 from collections.abc import Iterable
 
-from utils import IntType, StringType, Util
+from dav_utils.descriptors import DictType, IntType, ListType, StringType
+from dav_utils.utils import Util
 
 
 class TestUtil(unittest.TestCase):
@@ -132,11 +133,21 @@ class TestUtil(unittest.TestCase):
         self.assertIsInstance(result, Iterable)
         self.assertIsInstance(next(result), str)  # noqa
 
-    def test_save_text_file(self):
+    def test_save_text_file_one_line(self):
         """Text file saver test case."""
         cls = self._instance_class_being_tested
         file_path = __file__ + self._temp_value
         cls.save_text_file(file_path, self._temp_value)
+        self.assertTrue(os.path.exists(file_path))
+        os.remove(file_path)
+        self.assertTrue(True)
+
+    def test_save_text_file_multi_line(self):
+        """Test file saver with multi line value."""
+        cls = self._instance_class_being_tested
+        file_path = __file__ + self._temp_value
+        random_list = [str(i) + self._temp_value + '\n' for i in range(10)]
+        cls.save_text_file(file_path, random_list)
         self.assertTrue(os.path.exists(file_path))
         os.remove(file_path)
         self.assertTrue(True)
@@ -162,14 +173,52 @@ class TestDescriptors(unittest.TestCase):
             bad_str = StringType('bad_str')
             good_int = IntType('good_int')
             bad_int = IntType('bad_int')
+            good_dict = DictType('good_dict')
+            bad_dict = DictType('bad_dict')
+            good_list = ListType('good_list')
+            bad_list = ListType('bad_list')
 
-            def __init__(self, good_str, bad_str, good_int, bad_int):
+            def __init__(self, good_str, bad_str, good_int, bad_int, good_dict, bad_dict, good_list, bad_list):
                 self.good_str = good_str
                 self.bad_str = bad_str
                 self.good_int = good_int
                 self.bad_int = bad_int
+                self.good_dict = good_dict
+                self.bad_dict = bad_dict
+                self.good_list = good_list
+                self.bad_list = bad_list
 
-        cls._instance_class_being_tested = TemporaryClass('good', 'bad', 5, 0)
+        cls._instance_class_being_tested = TemporaryClass('good', 'bad', 5, 0, dict(), dict(), list(), list())
+
+    def test_dict_type(self):
+        """Descriptor DictType descriptor test cases."""
+        try:
+            self._instance_class_being_tested.good_dict = {'k': 'v'}
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+        try:
+            self._instance_class_being_tested.bad_dict = list()
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
+    def test_list_type(self):
+        """Descriptor ListType descriptor test cases."""
+        try:
+            self._instance_class_being_tested.good_list = ['a', 'b']
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+        try:
+            self._instance_class_being_tested.bad_list = {'k': 'v'}
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
 
     def test_string_type(self):
         """Descriptor StringType descriptor test cases."""
