@@ -6,7 +6,7 @@ import unittest
 import uuid
 
 
-from utils import Config
+from dav_utils.config import Config
 
 
 class TestConfig(unittest.TestCase):

@@ -4,7 +4,7 @@
 
 [report]
 include =
-    utils.py
+    dav_utils/*
 
 omit =
     tests/*
