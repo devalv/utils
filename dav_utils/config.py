@@ -57,4 +57,4 @@ class Config(Util):
         # For extra verbosity keys should be in upper register
         attrs = {k.upper(): v for k, v in self.public_attrs().items()}
         self.save_json_file(file_path, attrs)
-        self.log.info(f'Template {file_path} created.')
+        self.log.info('Template {file_path} created.'.format(file_path=file_path))

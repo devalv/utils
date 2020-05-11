@@ -15,7 +15,7 @@ class TypeChecker:
         if isinstance(value, self.value_type):
             instance.__dict__[self.name] = value
         else:
-            raise TypeError(f'{self.name}={value} is not a {self.value_type}')
+            raise TypeError('{val} is not a {val_type}'.format(val=value, val_type=self.value_type))
 
     def __get__(self, instance, class_):
         """Return attribute value."""
