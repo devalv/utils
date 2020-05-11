@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*
-"""Extendable config template.
+"""Extendable config template."""
 
-See README.md for examples.
-"""
 import io
 import json
 

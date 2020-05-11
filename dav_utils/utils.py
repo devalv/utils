@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Some useful utils for pure python scripts."""
+
 import datetime
 import io
 import json

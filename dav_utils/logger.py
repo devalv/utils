@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
-"""sys.stdout Logging template.
+"""stdout Logging template."""
 
-See README.md for examples.
-"""
 import logging
 import sys
 

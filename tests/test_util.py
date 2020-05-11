@@ -133,11 +133,21 @@ class TestUtil(unittest.TestCase):
         self.assertIsInstance(result, Iterable)
         self.assertIsInstance(next(result), str)  # noqa
 
-    def test_save_text_file(self):
+    def test_save_text_file_one_line(self):
         """Text file saver test case."""
         cls = self._instance_class_being_tested
         file_path = __file__ + self._temp_value
         cls.save_text_file(file_path, self._temp_value)
+        self.assertTrue(os.path.exists(file_path))
+        os.remove(file_path)
+        self.assertTrue(True)
+
+    def test_save_text_file_multi_line(self):
+        """Test file saver with multi line value."""
+        cls = self._instance_class_being_tested
+        file_path = __file__ + self._temp_value
+        random_list = '\n'.join([str(i) + self._temp_value for i in range(10)])
+        cls.save_text_file(file_path, random_list)
         self.assertTrue(os.path.exists(file_path))
         os.remove(file_path)
         self.assertTrue(True)
