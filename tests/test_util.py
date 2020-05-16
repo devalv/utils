@@ -5,7 +5,7 @@ import unittest
 import uuid
 from collections.abc import Iterable
 
-from dav_utils.descriptors import DictType, IntType, ListType, StringType
+from dav_utils.descriptors import DictType, HttpMethod, IntType, ListType, StringType, WritableFile
 from dav_utils.utils import Util
 
 
@@ -15,7 +15,13 @@ class TestUtil(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """Test mock values."""
-        cls._instance_class_being_tested = Util()
+
+        class Test(Util):
+
+            def method(self, val):
+                pass
+
+        cls._instance_class_being_tested = Test()
         cls._temp_value = str(uuid.uuid4())[:4]
         cls._date_fmt = '%Y%m%d'
         cls._valid_date_str = '20200418'
@@ -42,7 +48,7 @@ class TestUtil(unittest.TestCase):
         cls = self._instance_class_being_tested
         cls._private_attr = 'private_value'
         cls.public_attr = 'public_value'
-        cls.update({'_private_attr': 'updated', 'public_attr': 'updated'})
+        cls.update({'_private_attr': 'updated', 'public_attr': 'updated', 'method': 'method'})
         self.assertEqual(cls._private_attr, 'private_value')
         self.assertEqual(cls.public_attr, 'updated')
 
@@ -179,37 +185,25 @@ class TestDescriptors(unittest.TestCase):
     def setUpClass(cls):
         """Test mock values."""
         class TemporaryClass:
-            good_str = StringType('good_str')
-            bad_str = StringType('bad_str')
-            good_int = IntType('good_int')
-            bad_int = IntType('bad_int')
-            good_dict = DictType('good_dict')
-            bad_dict = DictType('bad_dict')
-            good_list = ListType('good_list')
-            bad_list = ListType('bad_list')
+            str_type = StringType('str_type')
+            int_type = IntType('int_type')
+            dict_type = DictType('dict_type')
+            list_type = ListType('list_type')
+            http_method = HttpMethod('http_method')
+            writable_file = WritableFile('writable_file')
 
-            def __init__(self, good_str, bad_str, good_int, bad_int, good_dict, bad_dict, good_list, bad_list):
-                self.good_str = good_str
-                self.bad_str = bad_str
-                self.good_int = good_int
-                self.bad_int = bad_int
-                self.good_dict = good_dict
-                self.bad_dict = bad_dict
-                self.good_list = good_list
-                self.bad_list = bad_list
-
-        cls._instance_class_being_tested = TemporaryClass('good', 'bad', 5, 0, dict(), dict(), list(), list())
+        cls._instance_class_being_tested = TemporaryClass()
 
     def test_dict_type(self):
         """Descriptor DictType descriptor test cases."""
         try:
-            self._instance_class_being_tested.good_dict = {'k': 'v'}
+            self._instance_class_being_tested.dict_type = {'k': 'v'}
         except TypeError:
             self.assertTrue(False)
         else:
             self.assertTrue(True)
         try:
-            self._instance_class_being_tested.bad_dict = list()
+            self._instance_class_being_tested.dict_type = list()
         except TypeError:
             self.assertTrue(True)
         else:
@@ -218,13 +212,13 @@ class TestDescriptors(unittest.TestCase):
     def test_list_type(self):
         """Descriptor ListType descriptor test cases."""
         try:
-            self._instance_class_being_tested.good_list = ['a', 'b']
+            self._instance_class_being_tested.list_type = ['a', 'b']
         except TypeError:
             self.assertTrue(False)
         else:
             self.assertTrue(True)
         try:
-            self._instance_class_being_tested.bad_list = {'k': 'v'}
+            self._instance_class_being_tested.list_type = {'k': 'v'}
         except TypeError:
             self.assertTrue(True)
         else:
@@ -233,13 +227,13 @@ class TestDescriptors(unittest.TestCase):
     def test_string_type(self):
         """Descriptor StringType descriptor test cases."""
         try:
-            self._instance_class_being_tested.good_str = 'test'
+            self._instance_class_being_tested.str_type = 'test'
         except TypeError:
             self.assertTrue(False)
         else:
             self.assertTrue(True)
         try:
-            self._instance_class_being_tested.bad_str = 1
+            self._instance_class_being_tested.str_type = 1
         except TypeError:
             self.assertTrue(True)
         else:
@@ -248,13 +242,91 @@ class TestDescriptors(unittest.TestCase):
     def test_int_type(self):
         """Descriptor IntType test cases."""
         try:
-            self._instance_class_being_tested.good_int = 1
+            self._instance_class_being_tested.int_type = 1
         except TypeError:
             self.assertTrue(False)
         else:
             self.assertTrue(True)
         try:
-            self._instance_class_being_tested.bad_int = '1'
+            self._instance_class_being_tested.int_type = '1'
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
+    def test_writable_file(self):
+        """Descriptor WritableFile test cases."""
+        # create temporary file
+        file_path = __file__ + 'qwe'
+        Util().save_text_file(file_path, 'self._temp_value')
+        # create temporary dir
+        dir_path = 'tmp_dir'
+        os.mkdir(dir_path)
+
+        try:
+            # permissions should be ok
+            self._instance_class_being_tested.writable_file = file_path
+        except PermissionError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+
+        try:
+            # permission error
+            # change file permissions
+            os.chmod(file_path, 0o444)
+            self._instance_class_being_tested.writable_file = file_path
+        except PermissionError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
+        try:
+            # type error
+            self._instance_class_being_tested.writable_file = dir_path
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
+        # change dir permissions
+        os.chmod(dir_path, 0o444)
+
+        try:
+            # change file permissions
+            bad_perm_file_path = os.path.join('.', dir_path, 'qwe')
+            self._instance_class_being_tested.writable_file = bad_perm_file_path
+        except PermissionError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
+        # check file without dir
+        no_dir_file_path = 'tmp.txt'
+        Util().save_text_file(no_dir_file_path, 'self._temp_value')
+        try:
+            # permissions should be ok
+            self._instance_class_being_tested.writable_file = no_dir_file_path
+        except PermissionError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+
+        os.remove(file_path)
+        os.remove(no_dir_file_path)
+        os.rmdir(dir_path)
+
+    def test_http_method(self):
+        """Descriptor HttpMethod test cases."""
+        try:
+            for method in HttpMethod.http_methods:
+                self._instance_class_being_tested.http_method = method
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+        try:
+            self._instance_class_being_tested.http_method = 'BAD'
         except TypeError:
             self.assertTrue(True)
         else:

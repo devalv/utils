@@ -41,6 +41,12 @@ Descriptor for string checking. Send __list__ as TypeChecker value_type.
 ### descriptors.DictType(TypeChecker)
 Descriptor for string checking. Send __dict__ as TypeChecker value_type.
 
+### descriptors.WritableFile(StringType)
+Descriptor for new file checking. Check that file (value) is a writable file or can be created.
+
+### descriptors.HttpMethod(StringType)
+Descriptor for http method checking. Check that value is one of http methods.
+
 ### Custom descriptor example
 ```
 class HttpMethodType(StringType):
