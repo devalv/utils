@@ -5,7 +5,7 @@
 for additional info see README.md
 """
 
-__version__ = '0.2.2'
+__version__ = '0.2.3'
 __all__ = [
     'descriptors', 'config', 'logger', 'utils'
 ]
