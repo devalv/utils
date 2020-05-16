@@ -152,6 +152,16 @@ class TestUtil(unittest.TestCase):
         os.remove(file_path)
         self.assertTrue(True)
 
+    def test_save_text_file_gen(self):
+        """Test file saver with generator as data."""
+        cls = self._instance_class_being_tested
+        file_path = __file__ + self._temp_value
+        random_gen = (str(i) + self._temp_value + '\n' for i in range(10))
+        cls.save_text_file(file_path, random_gen)
+        self.assertTrue(os.path.exists(file_path))
+        os.remove(file_path)
+        self.assertTrue(True)
+
     def test_save_json_file(self):
         """Json file saver test case."""
         cls = self._instance_class_being_tested

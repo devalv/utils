@@ -122,6 +122,7 @@ Generator object that line by line read the __file_name__ file.
 
 #### Util.save_text_file(file_path: str, txt_data)
 Save file in plaint text format.
+txt_data can be List, Generator or String.
 
 #### Util.save_json_file(file_path: str, json_data)
 Save file in JSON format.
