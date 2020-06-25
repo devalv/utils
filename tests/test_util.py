@@ -5,7 +5,9 @@ import unittest
 import uuid
 from collections.abc import Iterable
 
-from dav_utils.descriptors import DictType, HttpMethod, IntType, ListType, StringType, WritableFile
+from dav_utils.descriptors import (BoolType, DictType, HttpMethod, IntType, ListType,
+                                   NullableDictType, NullableIntType, NullableStringType, StringType,
+                                   UuidStringType, WritableFile, argument_type_checker)
 from dav_utils.utils import Util
 
 
@@ -186,13 +188,49 @@ class TestDescriptors(unittest.TestCase):
         """Test mock values."""
         class TemporaryClass:
             str_type = StringType('str_type')
+            nullable_str_type = NullableStringType('nullable_str_type')
             int_type = IntType('int_type')
+            nullable_int_type = NullableIntType('nullable_int_type')
             dict_type = DictType('dict_type')
+            nullable_dict_type = NullableDictType('nullable_dict_type')
             list_type = ListType('list_type')
             http_method = HttpMethod('http_method')
             writable_file = WritableFile('writable_file')
+            bool_type = BoolType('bool_type')
+            uuid_string_type = UuidStringType('uuid_string_type')
+
+            @argument_type_checker
+            def annotated(self, val: str = None):
+                pass
 
         cls._instance_class_being_tested = TemporaryClass()
+
+    def test_method_annotated_argument(self):
+        """Decorator argument_type_checker."""
+        try:
+            self._instance_class_being_tested.annotated(val='1')
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+        try:
+            self._instance_class_being_tested.annotated('1')
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+        try:
+            self._instance_class_being_tested.annotated(val=1)
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+        try:
+            self._instance_class_being_tested.annotated(1)
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
 
     def test_dict_type(self):
         """Descriptor DictType descriptor test cases."""
@@ -209,6 +247,27 @@ class TestDescriptors(unittest.TestCase):
         else:
             self.assertTrue(False)
 
+    def test_nullable_dict_type(self):
+        """Descriptor NullableDictType descriptor test cases."""
+        try:
+            self._instance_class_being_tested.nullable_dict_type = {'k': 'v'}
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+        try:
+            self._instance_class_being_tested.nullable_dict_type = list()
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+        try:
+            self._instance_class_being_tested.nullable_dict_type = None
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+
     def test_list_type(self):
         """Descriptor ListType descriptor test cases."""
         try:
@@ -219,6 +278,21 @@ class TestDescriptors(unittest.TestCase):
             self.assertTrue(True)
         try:
             self._instance_class_being_tested.list_type = {'k': 'v'}
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
+    def test_uuid_string_type(self):
+        """Descriptor UuidStringType descriptor test cases."""
+        try:
+            self._instance_class_being_tested.uuid_string_type = 'ac158335-a0e2-4e59-b722-08328b2985d4'
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+        try:
+            self._instance_class_being_tested.uuid_string_type = 1
         except TypeError:
             self.assertTrue(True)
         else:
@@ -239,6 +313,27 @@ class TestDescriptors(unittest.TestCase):
         else:
             self.assertTrue(False)
 
+    def test_nullable_string_type(self):
+        """Descriptor NullableStringType descriptor test cases."""
+        try:
+            self._instance_class_being_tested.nullable_str_type = 'test'
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+        try:
+            self._instance_class_being_tested.nullable_str_type = 1
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+        try:
+            self._instance_class_being_tested.nullable_str_type = None
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+
     def test_int_type(self):
         """Descriptor IntType test cases."""
         try:
@@ -253,6 +348,42 @@ class TestDescriptors(unittest.TestCase):
             self.assertTrue(True)
         else:
             self.assertTrue(False)
+
+    def test_bool_type(self):
+        """Descriptor BoolType test cases."""
+        try:
+            self._instance_class_being_tested.bool_type = True
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+        try:
+            self._instance_class_being_tested.bool_type = '1'
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+
+    def test_nullable_int_type(self):
+        """Descriptor NullableIntType test cases."""
+        try:
+            self._instance_class_being_tested.nullable_int_type = 1
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
+        try:
+            self._instance_class_being_tested.nullable_int_type = '1'
+        except TypeError:
+            self.assertTrue(True)
+        else:
+            self.assertTrue(False)
+        try:
+            self._instance_class_being_tested.nullable_int_type = None
+        except TypeError:
+            self.assertTrue(False)
+        else:
+            self.assertTrue(True)
 
     def test_writable_file(self):
         """Descriptor WritableFile test cases."""
