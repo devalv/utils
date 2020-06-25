@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 """Descriptors for extra type checking."""
+import functools
+import inspect
 import os
+from uuid import UUID
 
 
 class TypeChecker:
@@ -55,6 +58,61 @@ class DictType(TypeChecker):
         super().__init__(name, dict)
 
 
+class BoolType(TypeChecker):
+    """Descriptor for bool checking."""
+
+    def __init__(self, name):
+        """Use 'bool' for TypeChecker value_type."""
+        super().__init__(name, bool)
+
+
+class NullableDictType(DictType):
+    """Descriptor for dict checking."""
+
+    def __set__(self, instance, value):
+        """Check that attribute value type equals value_type."""
+        if isinstance(value, self.value_type) or value is None:
+            instance.__dict__[self.name] = value
+        else:
+            raise TypeError('{val} is not a {val_type}'.format(val=value, val_type=self.value_type))
+
+
+class NullableStringType(StringType):
+    """Descriptor for nullable string checking."""
+
+    def __set__(self, instance, value):
+        """Check that attribute value type equals value_type."""
+        if isinstance(value, self.value_type) or value is None:
+            instance.__dict__[self.name] = value
+        else:
+            raise TypeError('{val} is not a {val_type}'.format(val=value, val_type=self.value_type))
+
+
+class NullableIntType(IntType):
+    """Descriptor for nullable int checking."""
+
+    def __set__(self, instance, value):
+        """Check that attribute value type equals value_type."""
+        if isinstance(value, self.value_type) or value is None:
+            instance.__dict__[self.name] = value
+        else:
+            raise TypeError('{val} is not a {val_type}'.format(val=value, val_type=self.value_type))
+
+
+class UuidStringType(NullableStringType):
+    """Check that string is a uuid-representation."""
+
+    def __set__(self, instance, value):
+        """Check that attribute value can be converted to UUID."""
+        try:
+            if value:
+                UUID(value)
+        except (ValueError, AttributeError):
+            raise TypeError('{val} is not a uuid string.'.format(val=value))
+        else:
+            super().__set__(instance, value)
+
+
 class WritableFile(StringType):
     """Check that file (value) is a writable file or can be created."""
 
@@ -89,3 +147,28 @@ class HttpMethod(StringType):
         if value.upper() not in self.http_methods:
             instance.__dict__[self.name] = None
             raise TypeError('{val} is not a HTTP Method.'.format(val=value))
+
+
+def argument_type_checker(func):
+    """Сравнивает аннотации типов аргументов функции с типами значений."""
+
+    @functools.wraps(func)
+    def wrapper(*args, **kwargs):
+        arguments = inspect.getfullargspec(func).args
+        annotations = func.__annotations__
+
+        if annotations:
+            for idx, arg_name in enumerate(arguments):
+                arg_annotation = annotations.get(arg_name)
+                arg_value = args[idx] if len(args) > idx else None
+                if arg_annotation and arg_value and not isinstance(arg_value, arg_annotation):
+                    raise TypeError('{arg} is not a proper {arg_type}.'.format(arg=arg_value, arg_type=arg_annotation))
+
+            for kwarg in kwargs:
+                kwarg_annotation = annotations.get(kwarg)
+                if kwarg_annotation and not isinstance(kwargs[kwarg], kwarg_annotation):
+                    raise TypeError(
+                        '{kwarg} is not a proper {arg_type}.'.format(kwarg=kwarg, arg_type=kwarg_annotation))
+
+        return func(*args, **kwargs)
+    return wrapper
