@@ -187,17 +187,17 @@ class TestDescriptors(unittest.TestCase):
     def setUpClass(cls):
         """Test mock values."""
         class TemporaryClass:
-            str_type = StringType('str_type')
-            nullable_str_type = NullableStringType('nullable_str_type')
-            int_type = IntType('int_type')
-            nullable_int_type = NullableIntType('nullable_int_type')
-            dict_type = DictType('dict_type')
-            nullable_dict_type = NullableDictType('nullable_dict_type')
-            list_type = ListType('list_type')
-            http_method = HttpMethod('http_method')
-            writable_file = WritableFile('writable_file')
-            bool_type = BoolType('bool_type')
-            uuid_string_type = UuidStringType('uuid_string_type')
+            str_type = StringType()
+            nullable_str_type = NullableStringType()
+            int_type = IntType()
+            nullable_int_type = NullableIntType()
+            dict_type = DictType()
+            nullable_dict_type = NullableDictType()
+            list_type = ListType()
+            http_method = HttpMethod()
+            writable_file = WritableFile()
+            bool_type = BoolType()
+            uuid_string_type = UuidStringType()
 
             @argument_type_checker
             def annotated(self, val: str = None):

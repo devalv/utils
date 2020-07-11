@@ -9,9 +9,8 @@ from uuid import UUID
 class TypeChecker:
     """Descriptor for type checking."""
 
-    def __init__(self, name, value_type):
+    def __init__(self, value_type):
         """Set attribute name and checking value type."""
-        self.name = name
         self.value_type = value_type
 
     def __set__(self, instance, value):
@@ -25,45 +24,49 @@ class TypeChecker:
         """Return attribute value."""
         return instance.__dict__[self.name]
 
+    def __set_name__(self, owner, name):
+        """Set argument name."""
+        self.name = name
+
 
 class StringType(TypeChecker):
     """Descriptor for string checking."""
 
-    def __init__(self, name):
+    def __init__(self):
         """Use 'str' for TypeChecker value_type."""
-        super().__init__(name, str)
+        super().__init__(str)
 
 
 class IntType(TypeChecker):
     """Descriptor for int checking."""
 
-    def __init__(self, name):
+    def __init__(self):
         """Use 'int' for TypeChecker value_type."""
-        super().__init__(name, int)
+        super().__init__(int)
 
 
 class ListType(TypeChecker):
     """Descriptor for list checking."""
 
-    def __init__(self, name):
+    def __init__(self):
         """Use 'list' for TypeChecker value_type."""
-        super().__init__(name, list)
+        super().__init__(list)
 
 
 class DictType(TypeChecker):
     """Descriptor for dict checking."""
 
-    def __init__(self, name):
+    def __init__(self):
         """Use 'dict' for TypeChecker value_type."""
-        super().__init__(name, dict)
+        super().__init__(dict)
 
 
 class BoolType(TypeChecker):
     """Descriptor for bool checking."""
 
-    def __init__(self, name):
+    def __init__(self):
         """Use 'bool' for TypeChecker value_type."""
-        super().__init__(name, bool)
+        super().__init__(bool)
 
 
 class NullableDictType(DictType):

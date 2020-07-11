@@ -16,9 +16,9 @@ class Logging:
     file_handler is missing intentionally. Use OS features.
     """
 
-    log_date_fmt = StringType('log_date_fmt')
-    log_fmt = StringType('log_fmt')
-    log_lvl = StringType('log_lvl')
+    log_date_fmt = StringType()
+    log_fmt = StringType()
+    log_lvl = StringType()
 
     def __init__(self,
                  log_date_fmt: str,

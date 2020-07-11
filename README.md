@@ -14,7 +14,7 @@ Then __set__ called - checks that attribute value type equals value_type.
 #### Usage example:
 ```
 class Foo:
-    bar = TypeChecker('bar', list)
+    bar = TypeChecker(list)
 
     def __init__(self, bar):
         self.bar = bar
@@ -26,7 +26,7 @@ Descriptor for string checking. Send __str__ as TypeChecker value_type.
 #### Usage example:
 ```
 class Foo:
-    bar = StringType('bar')
+    bar = StringType()
 
     def __init__(self, bar):
         self.bar = bar
@@ -59,6 +59,13 @@ class HttpMethodType(StringType):
             raise TypeError(f'{self.name}={value} is not a HTTP Method.')
 ```
 
+### argument_type_checker decorator
+Compare function argument type annotations with value types.
+```
+@argument_type_checker
+def annotated(self, val: str = None):
+    pass
+```
 ## logger
 
 ### logger.Logging

@@ -21,9 +21,9 @@ class Config(Util):
     """
 
     __extensions = frozenset(['.json'])
-    log_date_fmt = StringType('log_date_fmt')
-    log_fmt = StringType('log_fmt')
-    log_lvl = StringType('log_lvl')
+    log_date_fmt = StringType()
+    log_fmt = StringType()
+    log_lvl = StringType()
 
     def __init__(self, config_file: str = None):
         """Load configuration parameters from config_file."""

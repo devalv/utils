@@ -10,7 +10,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='dav_utils',
-    version='0.2.5',
+    version='0.3.0',
     author='Aleksey Devyatkin',
     author_email='devyatkin.av@ya.ru',
     description='Set of tools that often have to reproduce in Python scripts',
@@ -23,5 +23,5 @@ setuptools.setup(
         'License :: OSI Approved :: MIT License',
         'Operating System :: OS Independent',
     ],
-    python_requires='>=3.5',
+    python_requires='>=3.6',
 )
