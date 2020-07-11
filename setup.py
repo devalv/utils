@@ -10,7 +10,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='dav_utils',
-    version='0.2.4',
+    version='0.2.5',
     author='Aleksey Devyatkin',
     author_email='devyatkin.av@ya.ru',
     description='Set of tools that often have to reproduce in Python scripts',

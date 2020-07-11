@@ -150,7 +150,7 @@ class HttpMethod(StringType):
 
 
 def argument_type_checker(func):
-    """Сравнивает аннотации типов аргументов функции с типами значений."""
+    """Compare function argument type annotations with value types."""
 
     @functools.wraps(func)
     def wrapper(*args, **kwargs):
@@ -166,7 +166,8 @@ def argument_type_checker(func):
 
             for kwarg in kwargs:
                 kwarg_annotation = annotations.get(kwarg)
-                if kwarg_annotation and not isinstance(kwargs[kwarg], kwarg_annotation):
+                kwarg_value = kwargs[kwarg]
+                if kwarg_annotation and kwarg_value and not isinstance(kwarg_value, kwarg_annotation):
                     raise TypeError(
                         '{kwarg} is not a proper {arg_type}.'.format(kwarg=kwarg, arg_type=kwarg_annotation))
 
